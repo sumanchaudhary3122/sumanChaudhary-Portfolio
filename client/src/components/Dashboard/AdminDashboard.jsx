@@ -1,59 +1,77 @@
 import React, { useEffect, useState } from "react";
 import DetailsCard from "./DetailsCard";
 import { useNavigate } from "react-router-dom";
+
 export const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [clientsData, setClientsData] = useState([]);
+
+  const [clientsData, setClientsData] = useState({ data: [] });
+  const [selectedClient, setSelectedClient] = useState(null);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const getClientsData = async () => {
       try {
+        const token = localStorage.getItem("adminToken");
 
-     const token = localStorage.getItem("adminToken");
-    
+        const response = await fetch("http://localhost:8000/api/user/", {
+          headers: {
+            authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-const response = await fetch("http://localhost:8000/api/user/", {
-  headers: {
-    authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
-});
         if (!response.ok) {
           throw new Error("Failed to fetch clients");
         }
+
         const data = await response.json();
+
+        console.log("Backend Response Data:", data);
+
         setClientsData(data);
       } catch (error) {
         console.error("Error fetching clients:", error);
       }
     };
+
     getClientsData();
   }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("adminAuth");
     localStorage.removeItem("adminEmail");
-    localStorage.removeItem("adminToken")
+    localStorage.removeItem("adminToken");
+
     navigate("/");
   };
-  const handleClientClick = (id) => {
+
+  // Receive the complete client object
+  const handleClientClick = (client) => {
+    setSelectedClient(client);
     setOpen(true);
-    navigate("/adminDash/details/"+id);
+
+    navigate("/adminDash/details/" + client.id);
   };
-  
+
   return (
     <div className="min-h-full px-4 py-2">
       <div className="relative mx-auto max-w-290">
+        {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2 text-3xl font-bold">
               <h2 className="text-[#15131f]">Admin</h2>
+
               <span className="text-[#6552e0]">Dashboard</span>
             </div>
+
             <p className="mt-1 text-sm text-[#625f78]">
               Manage and respond to your clients' requests
             </p>
           </div>
+
+          {/* Total */}
           <div
             className="
               flex min-w-20 items-center justify-center
@@ -69,12 +87,15 @@ const response = await fetch("http://localhost:8000/api/user/", {
               <p className="text-xs font-medium text-[#625f78]">
                 Total
               </p>
+
               <p className="text-2xl font-bold text-[#6552e0]">
-                {clientsData.length}
+                {clientsData.data?.length || 0}
               </p>
             </div>
           </div>
- <button
+
+          {/* Logout */}
+          <button
             onClick={handleLogout}
             className="
               rounded-lg
@@ -91,7 +112,10 @@ const response = await fetch("http://localhost:8000/api/user/", {
             Log Out
           </button>
         </div>
+
+        {/* Main */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[390px_1fr]">
+          {/* Client List */}
           <div
             className={`
               ${!open ? "block" : "hidden md:block"}
@@ -105,6 +129,7 @@ const response = await fetch("http://localhost:8000/api/user/", {
               backdrop-blur-xl
             `}
           >
+            {/* Client List Header */}
             <div
               className="
                 mb-3
@@ -118,6 +143,7 @@ const response = await fetch("http://localhost:8000/api/user/", {
               <h3 className="font-semibold text-[#15131f]">
                 Client Requests
               </h3>
+
               <span
                 className="
                   rounded-full
@@ -129,9 +155,11 @@ const response = await fetch("http://localhost:8000/api/user/", {
                   text-[#6552e0]
                 "
               >
-                {clientsData.length} Requests
+                {clientsData.data?.length || 0} Requests
               </span>
             </div>
+
+            {/* Client List */}
             <div
               className="
                 h-[calc(70vh-70px)]
@@ -140,20 +168,16 @@ const response = await fetch("http://localhost:8000/api/user/", {
               "
             >
               <div className="space-y-3 pr-1">
-                {clientsData.length > 0 ? (
-                  clientsData.map((client) => (
+                {clientsData.data?.length > 0 ? (
+                  clientsData.data.map((client) => (
                     <div
                       key={client.id}
-                   onClick={() => {
-    // Only allow the card itself to navigate on desktop
-    if (window.innerWidth >= 768) {
-      handleClientClick(client.id);
-    }
-  }}
-  
-                        
-                        className="
-                      
+                      onClick={() => {
+                        if (window.innerWidth >= 768) {
+                          handleClientClick(client);
+                        }
+                      }}
+                      className="
                         group
                         flex
                         cursor-pointer
@@ -172,6 +196,7 @@ const response = await fetch("http://localhost:8000/api/user/", {
                         hover:shadow-[0_6px_20px_-8px_rgba(60,45,140,0.18)]
                       "
                     >
+                      {/* Client Information */}
                       <div className="flex min-w-0 items-center">
                         <img
                           src={client.image}
@@ -186,6 +211,7 @@ const response = await fetch("http://localhost:8000/api/user/", {
                             ring-[#ece8fe]
                           "
                         />
+
                         <div className="min-w-0 pl-3">
                           <h1
                             className="
@@ -194,8 +220,9 @@ const response = await fetch("http://localhost:8000/api/user/", {
                               text-[#15131f]
                             "
                           >
-                            {client.name}
+                            {client.fullName}
                           </h1>
+
                           <p
                             className="
                               truncate
@@ -207,13 +234,14 @@ const response = await fetch("http://localhost:8000/api/user/", {
                           </p>
                         </div>
                       </div>
+
+                      {/* Mobile View Button */}
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
 
-
-                          handleClientClick(client.id);
+                          handleClientClick(client);
                         }}
                         className="
                           ml-2
@@ -244,9 +272,13 @@ const response = await fetch("http://localhost:8000/api/user/", {
               </div>
             </div>
           </div>
+
+          {/* Details Card */}
           <div className={open ? "block" : "hidden md:block"}>
             <DetailsCard
-              setOpen={setOpen} open={open}
+              setOpen={setOpen}
+              open={open}
+              client={selectedClient}
             />
           </div>
         </div>

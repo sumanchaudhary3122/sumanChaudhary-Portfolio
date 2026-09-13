@@ -12,49 +12,38 @@ export const AdminLogin = () => {
   const LoginHandle = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const data = {
-      email,
-      password,
-    };
-
     try {
-      const response = await fetch("http://localhost:8000/login",
-      {
+      const response = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
-
-      const data1 = await response.json()
-
-      console.log("first", data1);
-
-      if (!response) {
-        toast.error(response.msg || "Invalid email or password");
+      const data = await response.json();
+      console.log("Admin Login:", data);
+      if (!response.ok) {
+        toast.error(data.msg);
         return;
       }
-
-      localStorage.setItem("adminToken", data1.token);
-      localStorage.setItem("adminAuth","true")
-
-      toast.success("Logged in successfully");
-
+      if (!data.token) {
+        toast.error("Login failed. Token not received.");
+        return;
+      }
+      localStorage.setItem("adminToken", data.token);
+      localStorage.setItem("adminAuth", "true");
+      toast.success(data.msg );
       navigate("/adminDash");
     } catch (error) {
       console.error("Login Error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Unable to connect to the server.");
     } finally {
       setLoading(false);
     }
   };
-
-  const SignIn = () => {
-    navigate("/login/createAdmin");
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#100b24] via-[#21164a] to-[#4c3b9e] px-4 py-8">
       <div className="absolute inset-0 overflow-hidden">
@@ -227,7 +216,7 @@ export const AdminLogin = () => {
                   </>
                 ) : (
                   <>
-                    Sign In{" "}
+                    Sign In
                     <p>
                       <MoveRight />
                     </p>
@@ -236,12 +225,12 @@ export const AdminLogin = () => {
               </span>
             </button>
           </form>
-          <button
-            onClick={SignIn}
+          {/* <button
+            onClick={() => navigate("/login/createAdmin")}
             className="group relative mt-10 h-13 w-full overflow-hidden rounded-xl bg-linear-to-r from-[#6552e0] to-[#7c5ce8] text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-purple-500/30 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Sign in
-          </button>
+            Create Admin
+          </button> */}
           <div className="mt-8 border-t border-[#eeeaf5] pt-5 text-center">
             <p className="text-xs text-[#9995aa]">
               Suman Chaudhary · Portfolio Admin
