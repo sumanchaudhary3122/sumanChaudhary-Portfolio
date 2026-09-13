@@ -1,0 +1,74 @@
+@import "tailwindcss";
+:root {
+  --bg: #f4f2fb;
+  --bg-deep: #eeeafb;
+  --surface: #ffffff;
+  --glass: rgba(255, 255, 255, 0.6);
+  --glass-strong: rgba(255, 255, 255, 0.86);
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --ink: #15131f;
+  --ink-soft: #625f78;
+  --ink-faint: #9b98b0;
+  --violet: #6552e0;
+  --violet-dark: #4a3ab8;
+  --violet-light: #9c8dfb;
+  --violet-wash: #ece8fe;
+  --mint: #2fbfa6;
+  --amber: #e7a143;
+  --line: rgba(21, 19, 31, 0.09);
+  --shadow-sm: 0 6px 20px -8px rgba(60, 45, 140, 0.18);
+  --shadow-lg: 0 30px 70px -30px rgba(60, 45, 140, 0.35);
+  --r-lg: 30px;
+  --r-md: 20px;
+  --r-sm: 13px;
+  --container: 1180px;
+}
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(
+      760px 420px at 82% -6%,
+      rgba(156, 141, 251, 0.28),
+      transparent 60%
+    ),
+    radial-gradient(
+      620px 420px at -6% 18%,
+      rgba(47, 191, 166, 0.14),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px 600px at 50% 110%,
+      rgba(101, 82, 224, 0.1),
+      transparent 60%
+    ),
+    var(--bg);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  outline: none;
+  border: none;
+}
+footer{
+   color: var(--ink);
+  background:
+    radial-gradient(
+      760px 420px at 82% -6%,
+      rgba(156, 141, 251, 0.28),
+      transparent 60%
+    ),
+    radial-gradient(
+      620px 420px at -6% 18%,
+      rgba(47, 191, 166, 0.14),
+    ),
+    radial-gradient(
+      900px 600px at 50% 110%,
+      rgba(101, 82, 224, 0.1),
+      transparent 40%
+    ),
+    var(--bg);
+}
+HTML{
+  scroll-behavior: smooth;
+}
