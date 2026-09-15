@@ -3,15 +3,15 @@ import React from "react";
 import { CiMail } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
+
 const DetailsCard = ({ setOpen, client }) => {
   const navigate = useNavigate();
-
   const handleBack = () => {
     setOpen(false);
     navigate("/adminDash");
   };
 
-  // Nothing selected yet
+
   if (!client) {
     return (
       <div
@@ -35,6 +35,7 @@ const DetailsCard = ({ setOpen, client }) => {
     );
   }
 
+  
   return (
     <div
       className="
@@ -48,7 +49,6 @@ const DetailsCard = ({ setOpen, client }) => {
         md:p-7
       "
     >
-      {/* Header */}
       <div
         className="
           flex
@@ -59,26 +59,17 @@ const DetailsCard = ({ setOpen, client }) => {
           pb-5
         "
       >
-        {/* Client Profile */}
         <div className="flex items-center">
           <img
-            src={client.image}
+            src={client.profileImage}
             alt={client.fullName}
             className="h-12 w-12 rounded-full object-cover"
           />
-
           <div className="pl-3">
-            <h1 className="font-bold text-[#15131f]">
-              {client.fullName}
-            </h1>
-
-            <p className="text-sm text-[#625f78]">
-              {client.email}
-            </p>
+            <h1 className="font-bold text-[#15131f]">{client.fullName}</h1>
+            <p className="text-sm text-[#625f78]">{client.email}</p>
           </div>
         </div>
-
-        {/* Actions */}
         <div className="flex space-x-2">
           <button
             type="button"
@@ -92,7 +83,6 @@ const DetailsCard = ({ setOpen, client }) => {
           >
             <Check size={20} />
           </button>
-
           <button
             type="button"
             className="
@@ -106,8 +96,6 @@ const DetailsCard = ({ setOpen, client }) => {
             <Trash size={20} />
           </button>
         </div>
-
-        {/* Mobile Back */}
         <button
           onClick={handleBack}
           className="
@@ -125,15 +113,9 @@ const DetailsCard = ({ setOpen, client }) => {
           Back
         </button>
       </div>
-
-      {/* Details */}
       <div className="space-y-5 py-6">
-        {/* Email */}
         <div>
-          <label className="mb-2 block text-xs font-semibold">
-            EMAIL
-          </label>
-
+          <label className="mb-2 block text-xs font-semibold">EMAIL</label>
           <input
             type="email"
             value={client.email || ""}
@@ -148,13 +130,8 @@ const DetailsCard = ({ setOpen, client }) => {
             "
           />
         </div>
-
-        {/* Phone */}
         <div>
-          <label className="mb-2 block text-xs font-semibold">
-            PHONE
-          </label>
-
+          <label className="mb-2 block text-xs font-semibold">PHONE</label>
           <input
             type="tel"
             value={client.phone || ""}
@@ -169,13 +146,8 @@ const DetailsCard = ({ setOpen, client }) => {
             "
           />
         </div>
-
-        {/* Location */}
         <div>
-          <label className="mb-2 block text-xs font-semibold">
-            LOCATION
-          </label>
-
+          <label className="mb-2 block text-xs font-semibold">LOCATION</label>
           <input
             type="text"
             value={client.location || ""}
@@ -190,13 +162,10 @@ const DetailsCard = ({ setOpen, client }) => {
             "
           />
         </div>
-
-        {/* Project Description */}
         <div>
           <label className="mb-2 block text-xs font-semibold">
             PROJECT DESCRIPTION
           </label>
-
           <textarea
             value={client.description || ""}
             readOnly
@@ -210,8 +179,6 @@ const DetailsCard = ({ setOpen, client }) => {
             "
           />
         </div>
-
-        {/* Email Button */}
         <a
           href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
             client.email || "",
@@ -240,5 +207,4 @@ const DetailsCard = ({ setOpen, client }) => {
     </div>
   );
 };
-
 export default DetailsCard;
